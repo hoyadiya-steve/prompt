@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바이브 코딩 도우미(Vibe Prompt Architect)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; background-color: #F4F5F7; }
+        .card { background-color: white; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
+        .input-field { width: 100%; border: 1px solid #D1D5DB; border-radius: 0.5rem; padding: 0.625rem 0.75rem; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
+        .input-field:focus { border-color: #3B82F6; box-shadow: 0 0 0 1px #3B82F6; }
+        .input-label { display: block; font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; }
+        
+        /* Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #4F46E5; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #4F46E5; }
+        
+        /* Custom Scrollbar for preview */
+        .preview-scroll::-webkit-scrollbar { width: 6px; }
+        .preview-scroll::-webkit-scrollbar-track { background: transparent; }
+        .preview-scroll::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 3px; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased pb-20">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-6 py-4 flex flex-wrap gap-4 justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-[#4F46E5] text-white w-8 h-8 rounded-lg flex items-center justify-center text-sm shadow-sm">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        바이브 코딩 도우미(Vibe Prompt Architect)
+                        <span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wider border border-blue-100">FOR TEACHERS</span>
+                    </h1>
+                    <p class="text-xs text-gray-500 mt-0.5">아이디어를 전문가 수준의 코딩 프롬프트로 바꿔보세요.</p>
+                </div>
+            </div>
+            <div class="flex items-center text-xs text-gray-600 bg-white border border-gray-200 shadow-sm px-3 py-1.5 rounded-full">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></span> 브라우저에서 바로 실행
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-8 flex flex-col xl:flex-row gap-6">
+        
+        <!-- Left Column: Inputs -->
+        <div class="w-full xl:w-[60%] space-y-5">
+            
+            <!-- AI Settings -->
+            <div class="card p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="bg-gray-100 text-gray-400 p-2 rounded-lg text-sm"><i class="fas fa-lock"></i></div>
+                    <div>
+                        <h2 class="text-sm font-bold flex items-center gap-2">Gemini AI 설정 
+                            <span class="bg-gray-100 text-gray-500 text-[10px] px-1.5 py-0.5 rounded">비활성화</span>
+                        </h2>
+                        <p class="text-xs text-gray-500 mt-0.5">AI 추천과 전문가 최적화를 사용하려면 내 API 키를 연결하세요.</p>
+                    </div>
+                </div>
+                <div class="bg-gray-100 p-1 rounded-lg flex text-xs font-medium border border-gray-200">
+                    <button class="px-3 py-1.5 rounded-md text-gray-500 hover:text-gray-700 transition-colors">AI 기능 활성화</button>
+                    <button class="px-3 py-1.5 rounded-md bg-white shadow-sm text-gray-800">비활성화</button>
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="card p-6">
+                <div class="flex items-start gap-3 mb-5">
+                    <span class="bg-[#4F46E5] text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shrink-0">1</span>
+                    <div>
+                        <h2 class="text-base font-bold">어떤 프로그램을 만들고 싶나요?</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">완벽하게 쓰지 않아도 괜찮아요. 핵심 아이디어만 알려주세요.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="input-label">프로그램 이름 <span class="text-gray-400 font-normal ml-1">(선택)</span></label>
+                        <input type="text" id="progName" placeholder="예: 우리 반 독서 기록장" class="input-field bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="input-label">프로그램 유형</label>
+                        <select id="progType" class="input-field bg-white appearance-none cursor-pointer">
+                            <option value="">유형을 선택하세요</option>
+                            <option value="교육용 웹 도구" selected>교육용 웹 도구</option>
+                            <option value="수업 자료/콘텐츠">수업 자료/콘텐츠</option>
+                            <option value="학급 관리 도구">학급 관리 도구</option>
+                            <option value="게임/퀴즈">게임/퀴즈</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="input-label flex justify-between">
+                        <span>아이디어 개요 <span class="text-red-500">*</span></span>
+                        <span class="text-gray-400 font-normal text-xs"><span id="charCount">0</span> / 800</span>
+                    </label>
+                    <textarea id="ideaText" rows="4" placeholder="예: 학생들이 매일 읽은 책과 한 줄 감상을 기록하면, 월별 독서량과 자주 읽는 분야를 보여주는 웹앱을 만들고 싶어요." class="input-field bg-white resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="card p-6">
+                <div class="flex items-start gap-3 mb-5">
+                    <span class="bg-[#4F46E5] text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shrink-0">2</span>
+                    <div>
+                        <h2 class="text-base font-bold">기본 조건을 골라주세요</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">선택만 하면 AI가 개발 용어로 정확하게 정리해요.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <label class="input-label">주요 사용자</label>
+                        <select id="userTarget" class="input-field bg-white appearance-none cursor-pointer">
+                            <option value="">선택</option>
+                            <option value="학생" selected>학생</option>
+                            <option value="교사">교사</option>
+                            <option value="학부모">학부모</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="input-label">디자인 스타일</label>
+                        <select id="designStyle" class="input-field bg-white appearance-none cursor-pointer">
+                            <option value="">선택</option>
+                            <option value="심플하고 깔끔하게" selected>심플하고 깔끔하게</option>
+                            <option value="귀엽고 친근하게">귀엽고 친근하게</option>
+                            <option value="전문적이고 신뢰감있게">전문적이고 신뢰감있게</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="input-label">개발 방식</label>
+                        <select id="devStack" class="input-field bg-white appearance-none cursor-pointer">
+                            <option value="">선택</option>
+                            <option value="단일 HTML 파일" selected>단일 HTML 파일</option>
+                            <option value="React/Tailwind">React/Tailwind</option>
+                            <option value="Vanilla JS">Vanilla JS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="input-label">주 사용 환경</label>
+                        <select id="environment" class="input-field bg-white appearance-none cursor-pointer">
+                            <option value="">선택</option>
+                            <option value="PC와 태블릿" selected>PC와 태블릿</option>
+                            <option value="모바일 전용">모바일 전용</option>
+                            <option value="모든 기기(반응형)">모든 기기(반응형)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label class="input-label">추가 요청 사항</label>
+                    <textarea id="extraReq" rows="2" placeholder="예: 로그인 없이 사용, 결과를 PDF로 저장, 큰 글씨와 쉬운 버튼 사용" class="input-field bg-white resize-none"></textarea>
+                </div>
+                
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-800">AI를 위한 단계별 가이드 포함</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">기획 → 구현 → 점검 순서까지 프롬프트에 넣어 결과의 완성도를 높여요.</p>
+                    </div>
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" name="toggle" id="stepToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer transition-colors duration-200 ease-in-out z-10" checked/>
+                        <label for="stepToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-[#4F46E5] cursor-pointer transition-colors duration-200 ease-in-out"></label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="card p-6">
+                <div class="flex items-start gap-3 mb-5">
+                    <span class="bg-[#4F46E5] text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shrink-0">3</span>
+                    <div>
+                        <h2 class="text-base font-bold">AI 전문가를 선택하세요</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">선택한 역할에 따라 설계 관점과 전문 용어가 달라져요.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="expertGrid">
+                    <!-- Experts -->
+                    <button class="expert-btn text-left p-4 rounded-xl border-2 border-[#4F46E5] bg-indigo-50 transition-all" data-expert="수석 웹 개발자">
+                        <div class="text-[#4F46E5] bg-white w-8 h-8 rounded-lg flex items-center justify-center mb-2 shadow-sm border border-indigo-100"><i class="fas fa-code"></i></div>
+                        <h3 class="text-sm font-bold text-gray-800">수석 웹 개발자</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">웹앱 · 업무 도구</p>
+                    </button>
+                    <button class="expert-btn text-left p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-all" data-expert="게임 엔진 설계자">
+                        <div class="text-amber-500 bg-amber-50 w-8 h-8 rounded-lg flex items-center justify-center mb-2"><i class="fas fa-gamepad"></i></div>
+                        <h3 class="text-sm font-bold text-gray-800">게임 엔진 설계자</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">퀴즈 · 교육 게임</p>
+                    </button>
+                    <button class="expert-btn text-left p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-all" data-expert="데이터 분석가">
+                        <div class="text-emerald-500 bg-emerald-50 w-8 h-8 rounded-lg flex items-center justify-center mb-2"><i class="fas fa-chart-pie"></i></div>
+                        <h3 class="text-sm font-bold text-gray-800">데이터 분석가</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">통계 · 대시보드</p>
+                    </button>
+                    <button class="expert-btn text-left p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-all" data-expert="교육용 UX 설계자">
+                        <div class="text-blue-500 bg-blue-50 w-8 h-8 rounded-lg flex items-center justify-center mb-2"><i class="fas fa-layer-group"></i></div>
+                        <h3 class="text-sm font-bold text-gray-800">교육용 UX 설계자</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">쉬운 화면 · 접근성</p>
+                    </button>
+                    <button class="expert-btn text-left p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-all" data-expert="업무 자동화 전문가">
+                        <div class="text-rose-500 bg-rose-50 w-8 h-8 rounded-lg flex items-center justify-center mb-2"><i class="fas fa-bolt"></i></div>
+                        <h3 class="text-sm font-bold text-gray-800">업무 자동화 전문가</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">반복 업무 · 연동</p>
+                    </button>
+                    <button class="expert-btn text-left p-4 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-all" data-expert="AI 서비스 기획자">
+                        <div class="text-purple-500 bg-purple-50 w-8 h-8 rounded-lg flex items-center justify-center mb-2"><i class="fas fa-sparkles"></i></div>
+                        <h3 class="text-sm font-bold text-gray-800">AI 서비스 기획자</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">AI 기능 · 서비스 흐름</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="card p-6">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-start gap-3">
+                        <span class="bg-[#4F46E5] text-white w-6 h-6 flex items-center justify-center rounded-full font-bold text-xs shrink-0">4</span>
+                        <div>
+                            <h2 class="text-base font-bold">AI 추천 기능 더하기</h2>
+                            <p class="text-xs text-gray-500 mt-0.5">아이디어에 꼭 맞는 핵심 기능 5개를 추천받아 선택하세요.</p>
+                        </div>
+                    </div>
+                    <button class="bg-gray-100 text-gray-400 font-medium text-xs px-4 py-2 rounded-lg cursor-not-allowed flex items-center gap-1">
+                        <i class="fas fa-wand-magic-sparkles"></i> 추천 기능 받기
+                    </button>
+                </div>
+                <div class="mt-4 bg-gray-50 p-4 rounded-lg text-center border border-gray-100">
+                    <p class="text-xs text-gray-400">먼저 아이디어를 작성하고 상단에서 AI 기능을 활성화해 주세요.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Preview -->
+        <aside class="w-full xl:w-[40%]">
+            <div class="sticky top-[88px] space-y-4">
+                
+                <div class="card bg-white flex flex-col h-[calc(100vh-140px)] min-h-[600px] overflow-hidden">
+                    <!-- Header -->
+                    <div class="p-5 border-b border-gray-100 shrink-0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-base font-bold flex items-center gap-2">
+                                실시간 미리보기
+                                <span class="bg-orange-100 text-orange-600 text-[10px] px-1.5 py-0.5 rounded font-bold">작성 중</span>
+                            </h2>
+                            <button id="resetBtn" class="text-xs text-gray-500 hover:text-gray-800">처음부터</button>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">입력할 때마다 자동으로 정리돼요.</p>
+                        
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-gray-700">프롬프트 준비도</span>
+                                <span id="progressText" class="text-[#4F46E5]">30%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                <div id="progressBar" class="bg-[#4F46E5] h-1.5 rounded-full transition-all duration-300" style="width: 30%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="flex bg-gray-50 border-b border-gray-200 p-1 shrink-0">
+                        <button class="flex-1 py-2 text-xs font-bold bg-white text-[#4F46E5] rounded shadow-sm border border-gray-200">최종 프롬프트</button>
+                        <button class="flex-1 py-2 text-xs font-medium text-gray-500 hover:text-gray-700">예상 코드</button>
+                        <button class="flex-1 py-2 text-xs font-medium text-gray-500 hover:text-gray-700">작동 흐름</button>
+                    </div>
+
+                    <!-- Prompt Area -->
+                    <div class="flex-1 flex flex-col p-4 bg-white overflow-hidden">
+                        <div class="flex justify-between items-center mb-2 px-1 shrink-0">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Prompt Preview</span>
+                            <button id="copyBtn" class="text-xs text-gray-600 border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 transition-colors flex items-center gap-1">
+                                <i class="far fa-copy"></i> 복사
+                            </button>
+                        </div>
+                        
+                        <div class="flex-1 bg-[#0D1117] rounded-xl p-4 overflow-y-auto preview-scroll relative">
+                            <pre id="promptResult" class="text-[#c9d1d9] font-mono text-xs leading-relaxed whitespace-pre-wrap font-medium"></pre>
+                        </div>
+                        
+                        <button class="w-full mt-4 bg-indigo-50 text-[#4F46E5] border border-indigo-100 font-bold text-sm py-2.5 rounded-lg hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2 shrink-0">
+                            <i class="fas fa-magic"></i> 전문가 프롬프트로 최적화
+                        </button>
+                        <p class="text-[10px] text-gray-400 text-center mt-2 shrink-0">아이디어 입력과 AI 활성화가 필요해요.</p>
+                    </div>
+                </div>
+
+                <!-- Tip Box -->
+                <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-4 flex gap-3 text-xs text-blue-800">
+                    <i class="fas fa-info-circle text-blue-500 mt-0.5 text-sm"></i>
+                    <p class="leading-relaxed"><strong>활용 팁:</strong> 완성된 프롬프트를 복사해 원하는 코딩 AI에 붙여 넣으세요. 결과를 확인한 뒤 수정할 점을 이어서 요청하면 더 좋아져요.</p>
+                </div>
+
+            </div>
+        </aside>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // State
+            let state = {
+                name: '',
+                type: '교육용 웹 도구',
+                idea: '',
+                user: '학생',
+                style: '심플하고 깔끔하게',
+                stack: '단일 HTML 파일',
+                env: 'PC와 태블릿',
+                extra: '',
+                expert: '수석 웹 개발자',
+                useSteps: true
+            };
+
+            // Elements
+            const inputs = {
+                name: document.getElementById('progName'),
+                type: document.getElementById('progType'),
+                idea: document.getElementById('ideaText'),
+                user: document.getElementById('userTarget'),
+                style: document.getElementById('designStyle'),
+                stack: document.getElementById('devStack'),
+                env: document.getElementById('environment'),
+                extra: document.getElementById('extraReq'),
+                useSteps: document.getElementById('stepToggle')
+            };
+            
+            const expertBtns = document.querySelectorAll('.expert-btn');
+            const charCount = document.getElementById('charCount');
+            const promptResult = document.getElementById('promptResult');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const copyBtn = document.getElementById('copyBtn');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // Initialize Preview
+            updatePreview();
+
+            // Event Listeners for inputs
+            Object.keys(inputs).forEach(key => {
+                const element = inputs[key];
+                const eventType = (element.type === 'checkbox' || element.tagName === 'SELECT') ? 'change' : 'input';
+                
+                element.addEventListener(eventType, (e) => {
+                    if (element.type === 'checkbox') {
+                        state[key] = e.target.checked;
+                    } else {
+                        state[key] = e.target.value;
+                    }
+                    
+                    if (key === 'idea') {
+                        charCount.textContent = e.target.value.length;
+                        if(e.target.value.length > 800) {
+                            e.target.value = e.target.value.substring(0, 800);
+                            state.idea = e.target.value;
+                            charCount.textContent = 800;
+                        }
+                    }
+                    updatePreview();
+                });
+            });
+
+            // Expert Selection Logic
+            expertBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const target = e.currentTarget;
+                    state.expert = target.dataset.expert;
+                    
+                    // Reset styling for all
+                    expertBtns.forEach(b => {
+                        b.classList.remove('border-[#4F46E5]', 'bg-indigo-50');
+                        b.classList.add('border-gray-200', 'bg-white');
+                    });
+                    
+                    // Apply active styling
+                    target.classList.remove('border-gray-200', 'bg-white');
+                    target.classList.add('border-[#4F46E5]', 'bg-indigo-50');
+                    
+                    updatePreview();
+                });
+            });
+
+            // Reset logic
+            resetBtn.addEventListener('click', () => {
+                inputs.name.value = '';
+                inputs.idea.value = '';
+                inputs.extra.value = '';
+                inputs.useSteps.checked = true;
+                
+                inputs.type.value = '교육용 웹 도구';
+                inputs.user.value = '학생';
+                inputs.style.value = '심플하고 깔끔하게';
+                inputs.stack.value = '단일 HTML 파일';
+                inputs.env.value = 'PC와 태블릿';
+
+                // Trigger input events manually to update state
+                Object.values(inputs).forEach(input => {
+                    const event = new Event(input.type === 'checkbox' || input.tagName === 'SELECT' ? 'change' : 'input');
+                    input.dispatchEvent(event);
+                });
+                
+                charCount.textContent = '0';
+                
+                // Reset expert to first
+                expertBtns[0].click();
+            });
+
+            // Copy logic
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(promptResult.innerText).then(() => {
+                    const originalHTML = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check text-green-500"></i> 복사됨!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHTML;
+                    }, 2000);
+                });
+            });
+
+            // Update function
+            function updatePreview() {
+                // Calculate Progress (simplified logic)
+                let filled = 0;
+                let total = 6; // Mandatory fields roughly
+                if(state.type) filled++;
+                if(state.idea.trim().length > 0) filled += 2;
+                if(state.user) filled++;
+                if(state.style) filled++;
+                if(state.stack) filled++;
+                
+                let percent = Math.min(Math.round((filled / total) * 100), 100);
+                if(filled === 0) percent = 10;
+                progressBar.style.width = `${percent}%`;
+                progressText.textContent = `${percent}%`;
+
+                // Generate text matching the screenshot's terminal look
+                const textName = state.name || '[이름 미정 - 목표를 적음]';
+                const textType = state.type || '[미정]';
+                const textIdea = state.idea ? `사용자가 입력한 아이디어:\n  "${state.idea}"\n  위 내용을 바탕으로 핵심 흐름과 규칙을 구체화할 것` : '[아이디어를 입력해주세요]';
+                
+                const textUser = state.user || '[미정]';
+                const textEnv = state.env || '[미정]';
+                
+                const textStyle = state.style || '[미정]';
+                const textStack = state.stack || '[미정]';
+
+                let promptText = `당신은 최고 수준의 [${state.expert}]입니다.
+아래의 기획 내용을 바탕으로 완벽하게 동작하는 결과물을 만들어주세요.
+
+- 이름: ${textName}
+- 유형: ${textType}
+- 핵심 아이디어: ${textIdea}
+
+[사용자와 사용 환경]
+- 주요 사용자: ${textUser}
+- 주 사용 환경: ${textEnv}
+- 사용자가 별도 설명 없이도 직관적으로 이해하고 사용할 수 있도록 구성할 것.
+
+[UI / UX 접근]
+- 디자인: ${textStyle}
+- 충분한 여백, 명확한 색상, 텍스트 가독성을 최우선으로 할 것.
+- 오류 발생, 빈 화면(Empty state) 처리 등 예외 상황을 모두 설계할 것.
+
+[개발 및 구현 방식]
+- 개발 방식: ${textStack}`;
+
+                if(state.stack === '단일 HTML 파일') {
+                    promptText += `\n- 복사해서 브라우저에서 바로 열 수 있도록 HTML/CSS/JS 코드를 하나의 HTML 파일로 통합하여 제공할 것.`;
+                }
+
+                if(state.extra) {
+                    promptText += `\n\n[추가 요청 사항]\n- ${state.extra.split('\n').join('\n- ')}`;
+                }
+
+                if(state.useSteps) {
+                    promptText += `\n\n[진행 가이드]
+1. 먼저 프로그램의 핵심 구조와 작동 로직을 마크다운으로 요약해주세요.
+2. 요약에 동의를 구한 뒤, 완벽한 코드를 작성해 주세요.`;
+                }
+
+                promptResult.innerText = promptText;
+            }
+        });
+    </script>
+</body>
+</html>
